@@ -1,0 +1,73 @@
+# Komodo — render 30 fps di GitHub Actions (cara ode.toephank)
+# Repo: public, workflow_dispatch manual.
+# Hasil: final-9x16.mp4, 1080x1920, 30 fps, 102.25 detik, di Artifacts.
+#
+# File yang harus ada di repo SEBELUM Run workflow:
+#   clips/clip1.mp4  (12 MB)  sunrise walk
+#   clips/clip2.mp4  (4.8 MB) tongue / eye close-up
+#   clips/clip3.mp4  (20 MB)  stalking deer
+#   clips/clip4.mp4  (20 MB)  sprint chase, rusa lolos
+#   clips/clip5.mp4  (24 MB)  calm walk
+#   clips/clip6.mp4  (12 MB)  sunset rock
+#   narration.mp3    (1.6 MB) ElevenLabs, 101.25 detik
+#   ambience-bed.mp3 (1.7 MB) suara alam, sudah jadi di lokal
+#   captions-id.ass, title.txt, lower.txt — sudah ada di repo ini.
+#
+# Semua file biner di atas di-upload lewat GitHub web (Add file > Upload files),
+# masing-masing di bawah 25 MB, jadi bisa lewat browser.
+# JANGAN upload final-9x16.mp4 hasil lokal — itu yang mau dibuat di sini.
+#
+# Catatan: klip asli 720x1280 24 fps. Output 1080x1920 30 fps adalah
+# upscale + interpolasi gerak (minterpolate), bukan HD/30 fps asli.
+# Chase di kecepatan normal, adegan lain slow-motion seperti versi lokal v2.
+
+name: Render Komodo 30fps
+
+on:
+  workflow_dispatch:
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ffmpeg dan font
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
+
+      - name: Cek file input
+        run: |
+          ls -lh clips/ narration.mp3 ambience-bed.mp3 captions-id.ass
+          for f in clips/clip1.mp4 clips/clip2.mp4 clips/clip3.mp4 clips/clip4.mp4 clips/clip5.mp4 clips/clip6.mp4; do ffprobe -v error -show_entries stream=width,height,r_frame_rate -show_entries format=duration -of default=noprint_wrappers=1 "$f"; done
+
+      - name: Build 12 segmen + final mix
+        run: |
+          set -e
+          mkdir -p segs
+          FONT=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
+          vseg() {
+            ffmpeg -y -v error -i "$2" -filter_complex "[0:v]trim=start=$3:end=$4,setpts=$5*(PTS-STARTPTS),minterpolate=fps=30:mi_mode=mci:mc_mode=aobmc:vsbmc=1,scale=792:1408,setsar=1,crop=720:1280:x='36+20*sin(t*0.45+$7)':y='64+20*cos(t*0.35+$7)',scale=1080:1920,format=yuv420p,fps=30[v];[0:a]atrim=start=$3:end=$4,asetpts=PTS-STARTPTS,atempo=$6,volume=0.12[a]" -map "[v]" -map "[a]" -c:v libx264 -preset veryfast -crf 20 -c:a aac -b:a 96k "$1"
+          }
+          vseg segs/s01.mp4 clips/clip1.mp4 0 5 2.0 0.5 0
+          vseg segs/s02.mp4 clips/clip1.mp4 5 10 2.0 0.5 2
+          vseg segs/s03.mp4 clips/clip2.mp4 0 5 1.9 0.5263 1
+          vseg segs/s04.mp4 clips/clip2.mp4 5 10 1.9 0.5263 3
+          vseg segs/s05.mp4 clips/clip3.mp4 0 5 2.0 0.5 0
+          vseg segs/s06.mp4 clips/clip3.mp4 5 10 2.0 0.5 2
+          vseg segs/s07.mp4 clips/clip4.mp4 0 5 1.0 1.0 1
+          vseg segs/s08.mp4 clips/clip4.mp4 5 10 1.0 1.0 3
+          vseg segs/s09.mp4 clips/clip5.mp4 0 4 1.9 0.5263 0
+          vseg segs/s10.mp4 clips/clip5.mp4 4 8 1.9 0.5263 2
+          vseg segs/s11.mp4 clips/clip6.mp4 0 5 2.0 0.5 1
+          vseg segs/s12.mp4 clips/clip6.mp4 5 10 1.8 0.5556 3
+          printf "file 's01.mp4'\nfile 's02.mp4'\nfile 's03.mp4'\nfile 's04.mp4'\nfile 's05.mp4'\nfile 's06.mp4'\nfile 's07.mp4'\nfile 's08.mp4'\nfile 's09.mp4'\nfile 's10.mp4'\nfile 's11.mp4'\nfile 's12.mp4'\n" > segs/concat.txt
+          ffmpeg -y -v error -f concat -safe 0 -i segs/concat.txt -c:v libx264 -preset veryfast -crf 20 -r 30 -c:a aac -b:a 96k concat.mp4
+          ffmpeg -y -v error -i concat.mp4 -i narration.mp3 -i ambience-bed.mp3 -filter_complex "[0:v]fps=30,drawtext=fontfile=$FONT:textfile=title.txt:fontsize=52:fontcolor=white:borderw=2:bordercolor=black:box=1:boxcolor=black@0.6:boxborderw=20:x=(w-text_w)/2:y=h*0.38:enable='between(t,1.5,6.5)',drawtext=fontfile=$FONT:textfile=lower.txt:fontsize=40:fontcolor=white:borderw=2:bordercolor=black:box=1:boxcolor=black@0.6:boxborderw=16:x=(w-text_w)/2:y=150:enable='between(t,7,12)',subtitles=captions-id.ass[v];[1:a]adelay=1000|1000[narr];[0:a][narr][2:a]amix=inputs=3:normalize=0,alimiter=limit=0.9,loudnorm=I=-16:TP=-1.5:LRA=11[a]" -map "[v]" -map "[a]" -c:v libx264 -preset veryfast -crf 20 -r 30 -c:a aac -b:a 160k -t 102.25 final-9x16.mp4
+          ffprobe -v error -show_entries format=duration,size -show_entries stream=codec_type,codec_name,width,height,r_frame_rate -of default=noprint_wrappers=1 final-9x16.mp4
+
+      - name: Upload hasil
+        uses: actions/upload-artifact@v4
+        with:
+          name: final-9x16
+          path: final-9x16.mp4
