@@ -1,0 +1,36 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,DejaVu Sans,52,&HFFFFFF,&HFFFFFF,&H00000000,&HCC000000,1,0,0,0,100,100,0,0,4,2,0,2,60,60,280,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:01.00,0:00:06.08,Default,,0,0,0,,Di ujung timur Indonesia, matahari terbit di atas sabana Pulau Komodo.
+Dialogue: 0,0:00:06.08,0:00:10.40,Default,,0,0,0,,Di antara rerumputan kering, seekor naga bergerak perlahan.
+Dialogue: 0,0:00:10.40,0:00:17.29,Default,,0,0,0,,Dia adalah komodo, kadal terbesar di Bumi, dan pulau ini adalah kerajaannya.
+Dialogue: 0,0:00:17.29,0:00:22.80,Default,,0,0,0,,Komodo bisa tumbuh hingga tiga meter, dengan tubuh berotot dan cakar yang tajam.
+Dialogue: 0,0:00:22.80,0:00:24.76,Default,,0,0,0,,Dia tidak terburu-buru.
+Dialogue: 0,0:00:24.76,0:00:29.53,Default,,0,0,0,,Setiap langkahnya tenang, setiap gerakannya penuh perhitungan.
+Dialogue: 0,0:00:29.53,0:00:34.22,Default,,0,0,0,,Di pulau ini, dia adalah pemburu di puncak rantai makanan.
+Dialogue: 0,0:00:34.22,0:00:38.96,Default,,0,0,0,,Di seberang padang, seekor rusa sedang merumput, tanpa menyadari bahaya.
+Dialogue: 0,0:00:38.96,0:00:42.27,Default,,0,0,0,,Komodo merendahkan tubuhnya di antara rumput tinggi.
+Dialogue: 0,0:00:42.27,0:00:43.01,Default,,0,0,0,,Dia mengamati.
+Dialogue: 0,0:00:43.01,0:00:43.81,Default,,0,0,0,,Dia menunggu.
+Dialogue: 0,0:00:43.81,0:00:49.59,Default,,0,0,0,,Lidahnya yang bercabang menjulur, membaca bau di udara.
+Dialogue: 0,0:00:49.59,0:00:52.02,Default,,0,0,0,,Kesabaran adalah senjatanya.
+Dialogue: 0,0:00:52.02,0:00:56.68,Default,,0,0,0,,Dia bisa menunggu berjam-jam di bawah terik matahari, nyaris tak bergerak, sampai mangsanya lengah.
+Dialogue: 0,0:00:56.68,0:01:01.75,Default,,0,0,0,,Satu langkah yang salah bisa mengakhiri perburuan ini sebelum dimulai.
+Dialogue: 0,0:01:01.75,0:01:03.43,Default,,0,0,0,,Lalu, dalam sekejap, dia bergerak.
+Dialogue: 0,0:01:03.43,0:01:10.23,Default,,0,0,0,,Kaki-kakinya yang kuat mendorong tubuhnya yang besar maju dengan cepat.
+Dialogue: 0,0:01:10.23,0:01:15.19,Default,,0,0,0,,Sabana meledak dalam gerakan saat rusa melarikan diri di antara pepohonan.
+Dialogue: 0,0:01:15.19,0:01:18.20,Default,,0,0,0,,Kejaran itu berakhir secepat dimulainya.
+Dialogue: 0,0:01:18.20,0:01:23.31,Default,,0,0,0,,Rusa melarikan diri ke dalam hutan, dan komodo melambat menjadi berjalan.
+Dialogue: 0,0:01:23.31,0:01:28.36,Default,,0,0,0,,Dia kalah dalam perburuan ini, tetapi dia akan berburu lagi.
+Dialogue: 0,0:01:28.36,0:01:32.71,Default,,0,0,0,,Saat matahari terbenam, komodo beristirahat di atas batu hangat.
+Dialogue: 0,0:01:32.71,0:01:36.84,Default,,0,0,0,,Di Pulau Komodo, bertahan hidup bukan tentang satu kejaran.
+Dialogue: 0,0:01:36.84,0:01:42.25,Default,,0,0,0,,Ini tentang kesabaran, kekuatan, dan kemauan untuk mencoba lagi besok.
